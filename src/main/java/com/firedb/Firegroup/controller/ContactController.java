@@ -35,9 +35,9 @@ public class ContactController {
     @PatchMapping(path = "/update_contact/{id}")
     public void updateContact(@PathVariable("id") ContactEntity contactEntity,
                               @RequestParam(required = false) String name,
-                              @RequestParam(required = false) LocalDate birth_date,
-                              @RequestParam(required = false) String physical_disability) {
-        contactService.updateContact(contactEntity, name, birth_date, physical_disability);
+                              @RequestParam(required = false) LocalDate birthDate,
+                              @RequestParam(required = false) String physicalDisability) {
+        contactService.updateContact(contactEntity, name, birthDate, physicalDisability);
     }
 
     @DeleteMapping(path = "/delete_contact/{id}")

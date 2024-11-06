@@ -1,11 +1,16 @@
 package com.firedb.Firegroup.service;
 
+import com.firedb.Firegroup.dto.classDto.AccountEntityInputDto;
+import com.firedb.Firegroup.dto.classDto.DtoMapper;
+import com.firedb.Firegroup.dto.recordDto.AccountDtoGet;
+import com.firedb.Firegroup.dto.recordDto.ContactDtoGet;
 import com.firedb.Firegroup.entity.AccountEntity;
 import com.firedb.Firegroup.entity.ContactEntity;
 import com.firedb.Firegroup.exception.AccountAlreadyExistException;
 import com.firedb.Firegroup.exception.AccountNotFoundException;
 import com.firedb.Firegroup.repository.AccountRepository;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +31,12 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public List<AccountEntity> getAllAccounts() {
+    public List<AccountDtoGet> getAllAccounts() {
         logger.info("Fetching all accounts.");
-        return accountRepository.findAll();
+        return DtoMapper.INSTANCE.toAccountDtoGet(accountRepository.findAll());
     }
 
-    public void createAccount(AccountEntity accountEntity) {
+    public AccountEntityInputDto createAccount(AccountEntity accountEntity) {
         Long accountId = accountEntity.getAccount_id();
 
         logger.debug("Attempting to create new account with ID: {}.", accountEntity.getAccount_id());
@@ -41,11 +46,13 @@ public class AccountService {
             throw new AccountAlreadyExistException(String.format("Account with ID: %d already exists.", accountId));
         }
 
+        AccountEntity newAccountEntity = accountRepository.save(accountEntity);
         logger.info("Account created successfully with ID: {}", accountId);
-        accountRepository.save(accountEntity);
+
+        return DtoMapper.INSTANCE.toAccountEntityInputDto(new AccountEntity());
     }
 
-    public Optional<AccountEntity> updateAccount(Long accountId, ContactEntity contactEntity, String name, Integer categoryNumber) {
+    public Optional<AccountEntityInputDto> updateAccount(Long accountId, ContactEntity contactEntity, String name, Integer categoryNumber) {
         logger.debug("Attempting to update account with ID: {}", accountId);
 
         if (accountRepository.findFirstById(accountId).isEmpty()) {
@@ -55,7 +62,8 @@ public class AccountService {
         Optional<AccountEntity> updatedAccountEntity = accountRepository.alterAccount(accountId, contactEntity, name, categoryNumber);
 
         logger.info("Account with ID {} updated successfully.", accountId);
-        return updatedAccountEntity;
+        return updatedAccountEntity.map(DtoMapper.INSTANCE::toAccountEntityInputDto);
+
     }
 
     public void deleteAccount(Long accountId) {
@@ -65,14 +73,11 @@ public class AccountService {
             logger.warn("Attempted to delete a non-existent account with ID {}", accountId);
             throw new AccountNotFoundException(String.format("Could not delete account with ID: %d because it does not exist.", accountId));
         }
- 
+
         logger.info("Account with ID {} deleted successfully.", accountId);
         accountRepository.deleteById(accountId);
     }
 
-    //todo 2... ad to github and fix name
-    //todo do trough sql query's so you don't forget them
-    //todo 3... check what are java spring records and implement them
+    //todo 2... crete interface that all dtos implement or find another way
     //todo 4... add the same logic for all entities
-    //todo ask chat for better stuff add ge for one and do dto or other ----- done = false
 }

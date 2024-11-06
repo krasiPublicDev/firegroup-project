@@ -1,5 +1,7 @@
 package com.firedb.Firegroup.controller;
 
+import com.firedb.Firegroup.dto.classDto.AccountEntityInputDto;
+import com.firedb.Firegroup.dto.recordDto.AccountDtoGet;
 import com.firedb.Firegroup.entity.AccountEntity;
 import com.firedb.Firegroup.entity.ContactEntity;
 import com.firedb.Firegroup.service.AccountService;
@@ -24,14 +26,14 @@ public class AccountController {
     }
 
     @GetMapping(path = "/getAllAccounts")
-    public List<AccountEntity> getAllAccounts() {
+    public List<AccountDtoGet> getAllAccounts() {
         return accountService.getAllAccounts();
     }
 
     @PostMapping(path = "/create_account")
-    public ResponseEntity<Void> createAccount(@RequestBody AccountEntity accountEntity) {
-        accountService.createAccount(accountEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<AccountEntityInputDto> createAccount(@RequestBody AccountEntity accountEntity) {
+        AccountEntityInputDto accountDto = accountService.createAccount(accountEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountDto);
     }
 
     @Transactional
@@ -40,17 +42,17 @@ public class AccountController {
                                                 @RequestParam(required = false) ContactEntity contactEntity,
                                                 @RequestParam(required = false) String name,
                                                 @RequestParam(required = false) Integer categoryNumber) {
-        Optional<AccountEntity> updatedAccountEntity = accountService.updateAccount(accountId, contactEntity, name, categoryNumber);
+        Optional<AccountEntityInputDto> updatedAccount = accountService.updateAccount(accountId, contactEntity, name, categoryNumber);
 
-        return updatedAccountEntity
-                .map(updatedAccount -> ResponseEntity.ok("Account updated successfully: " + updatedAccount))
+        return updatedAccount
+                .map(account -> ResponseEntity.ok("Account updated successfully: " + updatedAccount))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(String.format("Account not found with given ID: %d", accountId)));
     }
 
     @DeleteMapping(path = "/delete_account/{id}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable("id") Long account_id) {
-        accountService.deleteAccount(account_id);
+    public ResponseEntity<Void> deleteAccount(@PathVariable("id") Long accountId) {
+        accountService.deleteAccount(accountId);
         return ResponseEntity.noContent().build();
 
     }
