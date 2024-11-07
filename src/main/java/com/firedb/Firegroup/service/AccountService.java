@@ -1,14 +1,15 @@
 package com.firedb.Firegroup.service;
 
+import com.firedb.Firegroup.dto.DtoMapper;
 import com.firedb.Firegroup.dto.classDto.AccountEntityInputDto;
-import com.firedb.Firegroup.dto.classDto.DtoMapper;
 import com.firedb.Firegroup.dto.recordDto.AccountDtoGet;
-import com.firedb.Firegroup.dto.recordDto.ContactDtoGet;
 import com.firedb.Firegroup.entity.AccountEntity;
 import com.firedb.Firegroup.entity.ContactEntity;
 import com.firedb.Firegroup.exception.AccountAlreadyExistException;
 import com.firedb.Firegroup.exception.AccountNotFoundException;
+import com.firedb.Firegroup.exception.ContactNotFoundException;
 import com.firedb.Firegroup.repository.AccountRepository;
+import jakarta.transaction.Transactional;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @ToString
@@ -36,34 +36,50 @@ public class AccountService {
         return DtoMapper.INSTANCE.toAccountDtoGet(accountRepository.findAll());
     }
 
-    public AccountEntityInputDto createAccount(AccountEntity accountEntity) {
-        Long accountId = accountEntity.getAccount_id();
+    public AccountDtoGet getAccountById(@NotNull Long id) {
+        logger.info("Attempting to get a account entity by ID: {}", id);
 
-        logger.debug("Attempting to create new account with ID: {}.", accountEntity.getAccount_id());
+        AccountEntity accountEntity = accountRepository.findFirstById(id)
+                .orElseThrow(() ->
+                {
+                    logger.error("Account with ID: {} not found.", id); // Log before throwing exception
+                    return new ContactNotFoundException(String.format("Account with ID: %d", id));
+                });
+
+        logger.info("Account with ID: {} found successfully.", id); // Log upon successful retrieval
+        return DtoMapper.INSTANCE.toAccountDtoGet(accountEntity);
+    }
+
+    public AccountEntityInputDto createAccount(@NotNull AccountEntity accountEntity) {
+        Long accountId = accountEntity.getAccountId();
+
+        logger.debug("Attempting to create new account with ID: {}.", accountEntity.getAccountId());
 
         if (accountId != null && accountRepository.findFirstById(accountId).isPresent()) {
-            logger.error("Account with ID {} already exists.", accountEntity.getAccount_id());
+            logger.error("Account with ID {} already exists.", accountEntity.getAccountId());
             throw new AccountAlreadyExistException(String.format("Account with ID: %d already exists.", accountId));
         }
 
         AccountEntity newAccountEntity = accountRepository.save(accountEntity);
         logger.info("Account created successfully with ID: {}", accountId);
 
-        return DtoMapper.INSTANCE.toAccountEntityInputDto(new AccountEntity());
+        return DtoMapper.INSTANCE.toAccountEntityInputDto(newAccountEntity);
     }
 
-    public Optional<AccountEntityInputDto> updateAccount(Long accountId, ContactEntity contactEntity, String name, Integer categoryNumber) {
+    @Transactional
+    public AccountEntityInputDto updateAccount(Long accountId, ContactEntity contactEntity, String name, Integer categoryNumber) {
         logger.debug("Attempting to update account with ID: {}", accountId);
 
         if (accountRepository.findFirstById(accountId).isEmpty()) {
             logger.error("Account with ID {} does not exist.", accountId);
             throw new AccountNotFoundException(String.format("Account with ID: %d does not exist.", accountId));
         }
-        Optional<AccountEntity> updatedAccountEntity = accountRepository.alterAccount(accountId, contactEntity, name, categoryNumber);
+
+        AccountEntity updatedAccountEntity = accountRepository.alterAccount(accountId, contactEntity, name, categoryNumber)
+                .orElseThrow(() -> new AccountNotFoundException(String.format("Account with ID: %d could not be updated.", accountId)));
 
         logger.info("Account with ID {} updated successfully.", accountId);
-        return updatedAccountEntity.map(DtoMapper.INSTANCE::toAccountEntityInputDto);
-
+        return DtoMapper.INSTANCE.toAccountEntityInputDto(updatedAccountEntity);
     }
 
     public void deleteAccount(Long accountId) {
@@ -78,6 +94,9 @@ public class AccountService {
         accountRepository.deleteById(accountId);
     }
 
-    //todo 2... crete interface that all dtos implement or find another way
+
+    //todo 2... fix the names of entities
+    //todo 3... add get a single entity in both services
     //todo 4... add the same logic for all entities
+    //todo 5... xml converter
 }

@@ -2,12 +2,12 @@ package com.firedb.Firegroup.dto.recordDto;
 
 import com.firedb.Firegroup.entity.AccountEntity;
 
-public record AccountDtoGet(Long accountId, String name, Integer category_number, ContactDtoGet contactId) {
+public record AccountDtoGet(Long accountId, String name, Integer categoryNumber, ContactDtoGet contactId) {
 
     public AccountDtoGet(AccountEntity accountEntity) {
-        this(accountEntity.getAccount_id(),
+        this(accountEntity.getAccountId(),
                 accountEntity.getName(),
-                accountEntity.getCategory_number(),
-                new ContactDtoGet(accountEntity.getAccount_id()));
+                accountEntity.getCategoryNumber(),
+                new ContactDtoGet(accountEntity.getAccountId()));
     }
 }

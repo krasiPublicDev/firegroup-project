@@ -4,7 +4,7 @@ import com.firedb.Firegroup.entity.ContactEntity;
 
 import java.time.LocalDate;
 
-public record ContactDtoGet(Long contactId, String name, Integer age, LocalDate birthDate, String physical_disability) {
+public record ContactDtoGet(Long contactId, String name, Integer age, LocalDate birthDate, String physicalDisability) {
     //info: there is auto generated constructor with all values
     //info: there is a constructor that takes only id
     public ContactDtoGet(Long contactId) {
@@ -19,7 +19,7 @@ public record ContactDtoGet(Long contactId, String name, Integer age, LocalDate 
         this(contactEntity.getId(),
                 contactEntity.getName(),
                 contactEntity.getAge(),
-                contactEntity.getBirth_date(),
-                contactEntity.getPhysical_disability());
+                contactEntity.getBirthDate(),
+                contactEntity.getPhysicalDisability());
     }
 }

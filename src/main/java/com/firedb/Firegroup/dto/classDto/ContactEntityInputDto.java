@@ -16,7 +16,7 @@ public class ContactEntityInputDto {
     private String name;
     private Integer age;
     private LocalDate birthDate;
-    private String physical_disability;
+    private String physicalDisability;
 
     public ContactEntityInputDto(Long contactId) {
         this(contactId,
@@ -30,7 +30,7 @@ public class ContactEntityInputDto {
         this(contactEntity.getId(),
                 contactEntity.getName(),
                 contactEntity.getAge(),
-                contactEntity.getBirth_date(),
-                contactEntity.getPhysical_disability());
+                contactEntity.getBirthDate(),
+                contactEntity.getPhysicalDisability());
     }
 }

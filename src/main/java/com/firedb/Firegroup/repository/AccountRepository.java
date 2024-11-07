@@ -19,6 +19,6 @@ public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
 
 
     @Modifying
-    @Query("UPDATE AccountEntity at SET at.contactEntity = ?2, at.name = ?3, at.category_number = ?4 WHERE at.account_id = ?1")
+    @Query("UPDATE AccountEntity at SET at.contactEntity = ?2, at.name = ?3, at.categoryNumber = ?4 WHERE at.accountId = ?1")
     Optional<AccountEntity> alterAccount(Long account_id, ContactEntity contactEntity, String name, Integer category_number);
 }

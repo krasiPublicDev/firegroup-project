@@ -27,17 +27,22 @@ public class AccountEntity {
             strategy = GenerationType.SEQUENCE,
             generator = "account_account_id_seq"
     )
-    private Long account_id;
+
+    @Column(name = "account_id")
+    private Long accountId;
+
     private String name;
-    private Integer category_number;
+
+    @Column(name = "category_number")
+    private Integer categoryNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contact_id")
     private ContactEntity contactEntity;
 
-    public AccountEntity(String name, Integer category_number, ContactEntity contactEntity) {
+    public AccountEntity(String name, Integer categoryNumber, ContactEntity contactEntity) {
         this.name = name;
-        this.category_number = category_number;
+        this.categoryNumber = categoryNumber;
         this.contactEntity = contactEntity;
     }
 }

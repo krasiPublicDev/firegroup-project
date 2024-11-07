@@ -12,14 +12,14 @@ public class AccountEntityInputDto {
 
     private Long accountId;
     private String name;
-    private Integer category_number;
+    private Integer categoryNumber;
     private ContactEntityInputDto contactId;
 
     public AccountEntityInputDto(AccountEntity accountEntity) {
-        this(accountEntity.getAccount_id(),
+        this(accountEntity.getAccountId(),
                 accountEntity.getName(),
-                accountEntity.getCategory_number(),
-                new ContactEntityInputDto(accountEntity.getAccount_id()));
+                accountEntity.getCategoryNumber(),
+                new ContactEntityInputDto(accountEntity.getAccountId()));
     }
 
 

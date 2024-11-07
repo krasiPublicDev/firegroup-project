@@ -1,6 +1,9 @@
-package com.firedb.Firegroup.dto.classDto;
+package com.firedb.Firegroup.dto;
 
+import com.firedb.Firegroup.dto.classDto.AccountEntityInputDto;
+import com.firedb.Firegroup.dto.classDto.ContactEntityInputDto;
 import com.firedb.Firegroup.dto.recordDto.AccountDtoGet;
+import com.firedb.Firegroup.dto.recordDto.ContactDtoGet;
 import com.firedb.Firegroup.entity.AccountEntity;
 import com.firedb.Firegroup.entity.ContactEntity;
 import org.mapstruct.Mapper;
@@ -19,6 +22,10 @@ public interface DtoMapper {
     List<AccountDtoGet> toAccountDtoGet(List<AccountEntity> accountEntity);
 
     ContactEntityInputDto toContactEntityInputDto(ContactEntity contactEntity);
+
+    ContactDtoGet toContactDtoGet(ContactEntity contactEntity);
+
+    List<ContactDtoGet> toContactDtoGet(List<ContactEntity> contactEntity);
 
 
 }

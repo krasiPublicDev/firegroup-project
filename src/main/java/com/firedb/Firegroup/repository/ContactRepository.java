@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -18,7 +17,7 @@ public interface ContactRepository extends JpaRepository<ContactEntity, Long> {
     Optional<ContactEntity> findFirstById(Long id);
 
     @Modifying
-    @Query("UPDATE ContactEntity ce SET ce.name = ?2, ce.birth_date = ?3, ce.physical_disability = ?4 WHERE ce.id = ?1")
-    int updateContact(Long id, String name, LocalDate birth_date, String physical_disability);
+    @Query("UPDATE ContactEntity ce SET ce.name = ?2, ce.birthDate = ?3, ce.physicalDisability = ?4 WHERE ce.id = ?1")
+    Optional<ContactEntity> updateContact(Long id, String name, LocalDate birth_date, String physical_disability);
 
 }

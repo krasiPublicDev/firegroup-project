@@ -1,9 +1,13 @@
 package com.firedb.Firegroup.controller;
 
+import com.firedb.Firegroup.dto.classDto.ContactEntityInputDto;
+import com.firedb.Firegroup.dto.recordDto.ContactDtoGet;
 import com.firedb.Firegroup.entity.ContactEntity;
 import com.firedb.Firegroup.service.ContactService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -21,28 +25,39 @@ public class ContactController {
     }
 
     @GetMapping(path = "/getAllContacts")
-    @ResponseBody
-    public List<ContactEntity> getALLContacts() {
-        return contactService.getAllContacts();
+    public ResponseEntity<List<ContactDtoGet>> getALLContacts() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(contactService.getAllContacts());
     }
 
-    @PostMapping(path = "/create_contact")
-    public void createContact(@RequestBody ContactEntity contactToCreate) {
-        contactService.createContact(contactToCreate);
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ContactDtoGet> getContactById(@PathVariable Long id) {
+        ContactDtoGet contactDto = contactService.getContactById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(contactDto);
+    }
+
+    @PostMapping
+    public ResponseEntity<ContactEntityInputDto> createContact(@RequestBody ContactEntity contactToCreate) {
+        ContactEntityInputDto contactDto = contactService.createContact(contactToCreate);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(contactDto);
     }
 
     @Transactional
-    @PatchMapping(path = "/update_contact/{id}")
-    public void updateContact(@PathVariable("id") ContactEntity contactEntity,
-                              @RequestParam(required = false) String name,
-                              @RequestParam(required = false) LocalDate birthDate,
-                              @RequestParam(required = false) String physicalDisability) {
-        contactService.updateContact(contactEntity, name, birthDate, physicalDisability);
+    @PatchMapping(path = "/{id}")
+    public ResponseEntity<ContactEntityInputDto> updateContact(@PathVariable("id") Long contactId,
+                                                               @RequestParam(required = false) String name,
+                                                               @RequestParam(required = false) LocalDate birthDate,
+                                                               @RequestParam(required = false) String physicalDisability) {
+        ContactEntityInputDto updateContact = contactService.updateContact(contactId, name, birthDate, physicalDisability);
+        return ResponseEntity.status(HttpStatus.OK).body(updateContact);
     }
 
-    @DeleteMapping(path = "/delete_contact/{id}")
-    public void deleteContact(@PathVariable("id") ContactEntity contactToDelete) {
-        contactService.deleteContact(contactToDelete);
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteContact(@PathVariable("id") Long contactId) {
+        contactService.deleteContact(contactId);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -33,19 +33,24 @@ public class ContactEntity {
     )
     private Long id;
     private String name;
+
     @Transient
     private Integer age;
-    private LocalDate birth_date;
-    private String physical_disability;
 
-    public ContactEntity(String name, LocalDate birth_date, String physical_disability) {
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
+
+    @Column(name = "physical_disability")
+    private String physicalDisability;
+
+    public ContactEntity(String name, LocalDate birthDate, String physicalDisability) {
         this.name = name;
-        this.birth_date = birth_date;
-        this.physical_disability = physical_disability;
+        this.birthDate = birthDate;
+        this.physicalDisability = physicalDisability;
     }
 
     //Custom getter for age
     public Integer getAge() {
-        return Period.between(birth_date, LocalDate.now()).getYears();
+        return Period.between(birthDate, LocalDate.now()).getYears();
     }
 }
