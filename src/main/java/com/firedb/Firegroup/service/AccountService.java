@@ -47,6 +47,9 @@ public class AccountService {
                 });
 
         logger.info("Account with ID: {} found successfully.", id); // Log upon successful retrieval
+
+        DtoMapper a =  DtoMapper.INSTANCE;
+        AccountDtoGet b = a.toAccountDtoGet(accountEntity);
         return DtoMapper.INSTANCE.toAccountDtoGet(accountEntity);
     }
 
@@ -94,9 +97,5 @@ public class AccountService {
         accountRepository.deleteById(accountId);
     }
 
-
-    //todo 2... fix the names of entities
-    //todo 3... add get a single entity in both services
-    //todo 4... add the same logic for all entities
     //todo 5... xml converter
 }

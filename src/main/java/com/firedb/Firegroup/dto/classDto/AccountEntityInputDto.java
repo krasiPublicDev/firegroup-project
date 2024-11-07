@@ -19,7 +19,7 @@ public class AccountEntityInputDto {
         this(accountEntity.getAccountId(),
                 accountEntity.getName(),
                 accountEntity.getCategoryNumber(),
-                new ContactEntityInputDto(accountEntity.getAccountId()));
+                ContactEntityInputDto.byId(accountEntity.getContactEntity().getId()));
     }
 
 

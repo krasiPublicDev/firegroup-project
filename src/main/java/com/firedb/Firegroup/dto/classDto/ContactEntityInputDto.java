@@ -3,6 +3,7 @@ package com.firedb.Firegroup.dto.classDto;
 import com.firedb.Firegroup.entity.ContactEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ContactEntityInputDto {
 
     private Long contactId;
@@ -18,8 +20,8 @@ public class ContactEntityInputDto {
     private LocalDate birthDate;
     private String physicalDisability;
 
-    public ContactEntityInputDto(Long contactId) {
-        this(contactId,
+    public static ContactEntityInputDto byId(Long contactId) {
+        return new ContactEntityInputDto(contactId,
                 null,
                 null,
                 null,

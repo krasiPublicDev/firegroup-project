@@ -7,6 +7,7 @@ import com.firedb.Firegroup.dto.recordDto.ContactDtoGet;
 import com.firedb.Firegroup.entity.AccountEntity;
 import com.firedb.Firegroup.entity.ContactEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
