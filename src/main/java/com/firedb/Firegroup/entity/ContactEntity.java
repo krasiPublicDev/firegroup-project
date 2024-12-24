@@ -31,7 +31,8 @@ public class ContactEntity {
             strategy = GenerationType.SEQUENCE,
             generator = "contact_id_seq"
     )
-    private Long id;
+    @Column(name = "id")
+    private Long contactId;
     private String name;
 
     @Transient

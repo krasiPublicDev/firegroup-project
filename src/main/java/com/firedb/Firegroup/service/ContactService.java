@@ -50,7 +50,7 @@ public class ContactService {
     }
 
     public ContactEntityInputDto createContact(@NotNull ContactEntity contactEntity) {
-        Long contactId = contactEntity.getId();
+        Long contactId = contactEntity.getContactId();
 
         logger.debug("Attempting to create a new contact with ID: {}", contactId);
 

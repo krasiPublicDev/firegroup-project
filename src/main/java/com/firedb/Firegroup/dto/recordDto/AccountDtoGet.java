@@ -8,6 +8,6 @@ public record AccountDtoGet(Long accountId, String name, Integer categoryNumber,
         this(accountEntity.getAccountId(),
                 accountEntity.getName(),
                 accountEntity.getCategoryNumber(),
-                new ContactDtoGet(accountEntity.getAccountId()));
+                new ContactDtoGet.Builder().contactId(accountEntity.getContactEntity().getContactId()).build());
     }
 }
